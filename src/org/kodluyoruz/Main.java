@@ -14,6 +14,7 @@ public class Main {
         String matrix[][]=new String[row][column];
 
 
+
         if (matrix.length >= 3 && matrix[0].length >= 3 && matrix.length <= 7 && matrix[0].length <= 7 && matrix.length == matrix[0].length){
 
             String[] gamers={"gamer", "computer"};
@@ -40,7 +41,7 @@ public class Main {
                         System.out.print("Yazmak istediğiniz sütun:");
                         getColumn = scanner.nextInt();
 
-                        if (getRow < matrix.length && getColumn < matrix[0].length) {
+                        if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
                             if (matrix[getRow][getColumn] == null) {
                                 matrix[getRow][getColumn] = characterRnd;
 
@@ -48,10 +49,15 @@ public class Main {
                                 System.out.println("Board : " + showBoard(matrix));
 
                                 //SOS kontrolü ve puan verme
-                                scoreGamer += calculateScore(matrix, getRow, getColumn, scoreGamer);
-                                System.out.println("scoreGamer : " + scoreGamer);
+                                int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
+                                if (tempScore > 0){
+                                    scoreGamer += calculateScore(matrix, getRow, getColumn, scoreGamer);
+                                    System.out.println("scoreGamer : " + scoreGamer);
 
-                                gamerIdx = 1; //Sıra computer'a geçti.
+                                    gamerIdx = 0; //Sıra hala gamer'da.
+                                }else{
+                                    gamerIdx = 1; //Sıra computer'a geçti.
+                                }
                             }
                         }else{
                             System.out.println("Hatalı değerler girdiniz, lütfen tekrar deneyin.");
@@ -65,17 +71,22 @@ public class Main {
                         getColumn = (int) ((Math.random() * (matrix[0].length)));
                         System.out.println("Yazılacak sütun:" + getColumn);
 
-                        if (getRow < matrix.length && getColumn < matrix[0].length) {
+                        if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
                             if (matrix[getRow][getColumn] == null) {
                                 matrix[getRow][getColumn] = characterRnd;
 
                                 System.out.println("Board : " + showBoard(matrix));
 
                                 //SOS kontrolü ve puan verme
-                                scoreComputer += calculateScore(matrix, getRow, getColumn, scoreComputer);
-                                System.out.println("scoreComputer : " + scoreComputer);
+                                int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
+                                if (tempScore > 0){
+                                    scoreComputer += tempScore;
+                                    System.out.println("scoreComputer : " + scoreComputer);
 
-                                gamerIdx = 0; //Sıra gamer'a geçti.
+                                    gamerIdx = 1; //Sıra hala computer'da.
+                                }else{
+                                    gamerIdx = 0; //Sıra gamer'a geçti.
+                                }
                             }
                         }else{
                             System.out.println("Hatalı değerler girildi! Tekrar değer atanacak.");
@@ -99,6 +110,8 @@ public class Main {
         }
 
     }
+
+    //Matrix'de boş alan kalmayana kadar oyunu devam ettirir.
     public static boolean matrixIsEmpty(String matrix[][]){
         for(int i = 0; i < matrix.length; i++){
             for(int j = 0; j < matrix[0].length; j++){
@@ -110,13 +123,12 @@ public class Main {
         return  false;
     }
 
+    //Oyun tahtasını gösterir.
     public static String showBoard(String matrix[][]){
 
         String result = "\n    ";
 
         for(int i = 0; i < matrix.length; i++){
-            //result += "\n    1  2  3\n    _ _ _";
-
             result += i + "  ";
         }
 
@@ -134,12 +146,14 @@ public class Main {
         return result;
     }
 
+    //Skor hesaplar.
     public static int calculateScore(String matrix[][], int row, int column, int score){
         score = 0;
 
-
+        //O harfinin yerinin kontrolü(+1/-1)
         if(matrix[row][column].equals("o")){
 
+            //O'nun sağ-sol kontrolü(S için)
             if(column - 1 >= 0 && column + 1 < matrix[0].length){
                 if(matrix[row][column - 1] != null && matrix[row][column + 1] != null){
                     if(matrix[row][column - 1].equals("s") && matrix[row][column + 1].equals("s")){
@@ -148,6 +162,7 @@ public class Main {
                 }
             }
 
+            //O'nun üst-alt kontrolü(S için)
             if(row - 1 >= 0 && row + 1 < matrix.length){
                 if (matrix[row - 1][column] != null && matrix[row +1][column] != null){
                     if(matrix[row - 1][column].equals("s") && matrix[row +1][column].equals("s")){
@@ -156,6 +171,7 @@ public class Main {
                 }
             }
 
+            //O'nun çapraz kontrolü(S için)
             if(row - 1 >= 0 && column - 1 >= 0 && row + 1 < matrix.length && column + 1 < matrix[0].length){
                 if (matrix[row - 1][column - 1] != null && matrix[row + 1][column + 1] != null){
                     if ((matrix[row - 1][column - 1].equals("s") && matrix[row + 1][column + 1].equals("s"))){
@@ -173,8 +189,10 @@ public class Main {
 
 
 
+        //S harfinin yerinin kontrolü(+2/-2)
         if (matrix[row][column].equals("s")){
 
+            //S'nun alt kontrolü(S ve O için)
             if (row + 2 < matrix.length){
                 if (matrix[row + 1][column] != null && matrix[row + 2][column] != null){
                     if ((matrix[row + 1][column]).equals("o") && (matrix[row + 2][column]).equals("s")){
@@ -183,6 +201,7 @@ public class Main {
                 }
             }
 
+            //S'nun üst kontrolü(S ve O için)
             if (row - 2 >= 0){
                 if (matrix[row - 1][column] != null && matrix[row - 2][column] != null){
                     if ((matrix[row - 1][column]).equals("o") && (matrix[row - 2][column]).equals("s")){
@@ -191,6 +210,7 @@ public class Main {
                 }
             }
 
+            //S'nun sağ kontrolü(S ve O için)
             if (column + 2 < matrix[0].length){
                 if (matrix[row][column + 1] != null && matrix[row][column + 2] != null){
                     if ((matrix[row][column + 1]).equals("o") && (matrix[row][column + 2]).equals("s")){
@@ -199,6 +219,7 @@ public class Main {
                 }
             }
 
+            //S'nun sol kontrolü(S ve O için)
             if (column - 2 >= 0){
                 if (matrix[row][column - 1] != null && matrix[row][column - 2] != null){
                     if ((matrix[row][column - 1]).equals("o") && (matrix[row][column - 2]).equals("s")){
@@ -207,6 +228,7 @@ public class Main {
                 }
             }
 
+            //S'nun sol üst çapraz kontrolü(S ve O için)
             if (row - 2 >= 0 && column - 2 >= 0){
                 if (matrix[row - 1][column - 1] != null && matrix[row - 2][column - 2] != null){
                     if ((matrix[row - 1][column - 1]).equals("o") && (matrix[row - 2][column - 2]).equals("s")){
@@ -215,6 +237,7 @@ public class Main {
                 }
             }
 
+            //S'nun sağ alt çapraz kontrolü(S ve O için)
             if (row + 2 < matrix.length && column + 2 < matrix[0].length){
                 if (matrix[row + 1][column + 1] != null && matrix[row + 2][column + 2] != null){
                     if ((matrix[row + 1][column + 1]).equals("o") && (matrix[row + 2][column + 2]).equals("s")){
@@ -223,6 +246,7 @@ public class Main {
                 }
             }
 
+            //S'nun sağ üst çapraz kontrolü(S ve O için)
             if (row - 2 >= 0 && column + 2 < matrix[0].length){
                 if (matrix[row - 1][column + 1] != null && matrix[row - 2][column + 2] != null){
                     if ((matrix[row - 1][column + 1]).equals("o") && (matrix[row - 2][column + 2]).equals("s")){
@@ -231,6 +255,7 @@ public class Main {
                 }
             }
 
+            //S'nun sol alt çapraz kontrolü(S ve O için)
             if (row + 2 < matrix.length && column - 2 >= 0){
                 if (matrix[row + 1][column - 1] != null && matrix[row + 2][column - 2] != null){
                     if ((matrix[row + 1][column - 1]).equals("o") && (matrix[row + 2][column - 2]).equals("s")){
