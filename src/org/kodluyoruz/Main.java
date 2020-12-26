@@ -6,109 +6,113 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Scanner scanner=new Scanner(System.in);
-        System.out.print("Satır:");
-        int row=scanner.nextInt();
-        System.out.print("Sütun:");
-        int column=scanner.nextInt();
-        String matrix[][]=new String[row][column];
 
+        try {
 
+            Scanner scanner=new Scanner(System.in);
+            System.out.print("Satır:");
+            int row=scanner.nextInt();
+            System.out.print("Sütun:");
+            int column=scanner.nextInt();
 
-        if (matrix.length >= 3 && matrix[0].length >= 3 && matrix.length <= 7 && matrix[0].length <= 7 && matrix.length == matrix[0].length){
+            String matrix[][]=new String[row][column];
 
-            String[] gamers={"gamer", "computer"};
-            String[] characters={"s", "o"};
-            int gamerIdx=new Random().nextInt(gamers.length);
-            String gamerRnd=(gamers[gamerIdx]);
-            System.out.println("Oyuna başlayacak oyuncu:"+gamerRnd);
+            if (matrix.length >= 3 && matrix[0].length >= 3 && matrix.length <= 7 && matrix[0].length <= 7 && matrix.length == matrix[0].length){
 
-            int scoreGamer = 0, scoreComputer = 0;
+                String[] gamers={"gamer", "computer"};
+                String[] characters={"s", "o"};
+                int gamerIdx=new Random().nextInt(gamers.length);
+                String gamerRnd=(gamers[gamerIdx]);
+                System.out.println("Oyuna başlayacak oyuncu:"+gamerRnd);
 
-            int getRow = 0, getColumn = 0;
+                int scoreGamer = 0, scoreComputer = 0;
 
-            do {
-                int characterIdx = new Random().nextInt(characters.length);
-                String characterRnd = (characters[characterIdx]);
+                int getRow = 0, getColumn = 0;
 
                 do {
-                    System.out.println("\nYazılacak harf:" + characterRnd);
-                    if (gamerIdx == 0) {
-                        System.out.println("\nGamer");
+                    int characterIdx = new Random().nextInt(characters.length);
+                    String characterRnd = (characters[characterIdx]);
 
-                        System.out.print("Yazmak istediğiniz satır:");
-                        getRow = scanner.nextInt();
-                        System.out.print("Yazmak istediğiniz sütun:");
-                        getColumn = scanner.nextInt();
+                    do {
+                        System.out.println("\nYazılacak harf:" + characterRnd);
+                        if (gamerIdx == 0) {
+                            System.out.println("\nGamer");
 
-                        if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
-                            if (matrix[getRow][getColumn] == null) {
-                                matrix[getRow][getColumn] = characterRnd;
+                            System.out.print("Yazmak istediğiniz satır:");
+                            getRow = scanner.nextInt();
+                            System.out.print("Yazmak istediğiniz sütun:");
+                            getColumn = scanner.nextInt();
+
+                            if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
+                                if (matrix[getRow][getColumn] == null) {
+                                    matrix[getRow][getColumn] = characterRnd;
 
 
-                                System.out.println("Board : " + showBoard(matrix));
+                                    System.out.println("Board : " + showBoard(matrix));
 
-                                //SOS kontrolü ve puan verme
-                                int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
-                                if (tempScore > 0){
-                                    scoreGamer += calculateScore(matrix, getRow, getColumn, scoreGamer);
-                                    System.out.println("scoreGamer : " + scoreGamer);
+                                    //SOS kontrolü ve puan verme
+                                    int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
+                                    if (tempScore > 0){
+                                        scoreGamer += calculateScore(matrix, getRow, getColumn, scoreGamer);
+                                        System.out.println("scoreGamer : " + scoreGamer);
 
-                                    gamerIdx = 0; //Sıra hala gamer'da.
-                                }else{
-                                    gamerIdx = 1; //Sıra computer'a geçti.
+                                        gamerIdx = 0; //Sıra hala gamer'da.
+                                    }else{
+                                        gamerIdx = 1; //Sıra computer'a geçti.
+                                    }
                                 }
+                            }else{
+                                System.out.println("Hatalı değerler girdiniz, lütfen tekrar deneyin.");
                             }
-                        }else{
-                            System.out.println("Hatalı değerler girdiniz, lütfen tekrar deneyin.");
-                        }
-                    } else if (gamerIdx == 1) {
-                        System.out.println("\nComputer");
+                        } else if (gamerIdx == 1) {
+                            System.out.println("\nComputer");
 
-                        getRow = (int) ((Math.random() * (matrix.length)));
-                        System.out.println("Yazılacak satır:" + getRow);
+                            getRow = (int) ((Math.random() * (matrix.length)));
+                            System.out.println("Yazılacak satır:" + getRow);
 
-                        getColumn = (int) ((Math.random() * (matrix[0].length)));
-                        System.out.println("Yazılacak sütun:" + getColumn);
+                            getColumn = (int) ((Math.random() * (matrix[0].length)));
+                            System.out.println("Yazılacak sütun:" + getColumn);
 
-                        if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
-                            if (matrix[getRow][getColumn] == null) {
-                                matrix[getRow][getColumn] = characterRnd;
+                            if (getRow >= 0 && getRow < matrix.length && getColumn >= 0 && getColumn < matrix[0].length) {
+                                if (matrix[getRow][getColumn] == null) {
+                                    matrix[getRow][getColumn] = characterRnd;
 
-                                System.out.println("Board : " + showBoard(matrix));
+                                    System.out.println("Board : " + showBoard(matrix));
 
-                                //SOS kontrolü ve puan verme
-                                int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
-                                if (tempScore > 0){
-                                    scoreComputer += tempScore;
-                                    System.out.println("scoreComputer : " + scoreComputer);
+                                    //SOS kontrolü ve puan verme
+                                    int tempScore = calculateScore(matrix, getRow, getColumn, scoreComputer);
+                                    if (tempScore > 0){
+                                        scoreComputer += tempScore;
+                                        System.out.println("scoreComputer : " + scoreComputer);
 
-                                    gamerIdx = 1; //Sıra hala computer'da.
-                                }else{
-                                    gamerIdx = 0; //Sıra gamer'a geçti.
+                                        gamerIdx = 1; //Sıra hala computer'da.
+                                    }else{
+                                        gamerIdx = 0; //Sıra gamer'a geçti.
+                                    }
                                 }
+                            }else{
+                                System.out.println("Hatalı değerler girildi! Tekrar değer atanacak.");
                             }
-                        }else{
-                            System.out.println("Hatalı değerler girildi! Tekrar değer atanacak.");
                         }
-                    }
 
-                } while (getRow >= matrix.length && getColumn >= matrix[0].length);
-            }while(matrixIsEmpty(matrix));
+                    } while (getRow >= matrix.length && getColumn >= matrix[0].length);
+                }while(matrixIsEmpty(matrix));
 
-            if (scoreComputer > scoreGamer){
-                System.out.println("Oyunu " + scoreComputer + " puanla bilgisayar kazandı!");
-            }else if(scoreComputer < scoreGamer){
-                System.out.println("Oyunu " + scoreGamer + " puanla siz kazandınız. Tebrikler!!");
+                if (scoreComputer > scoreGamer){
+                    System.out.println("Oyunu " + scoreComputer + " puanla bilgisayar kazandı!");
+                }else if(scoreComputer < scoreGamer){
+                    System.out.println("Oyunu " + scoreGamer + " puanla siz kazandınız. Tebrikler!!");
+                }else{
+                    System.out.println("Oyun berabere sonuçlandı.");
+                }
+
+
             }else{
-                System.out.println("Oyun berabere sonuçlandı.");
+                System.out.println("Lütfen 3-7 arasında ve birbirine eşit sayılar girin.");
             }
-
-
-        }else{
-            System.out.println("Lütfen 3-7 arasında ve birbirine eşit sayılar girin.");
+        } catch (NegativeArraySizeException ex) {
+            System.out.println("Satır ve sütun negatif değer alamaz!");
         }
-
     }
 
     //Matrix'de boş alan kalmayana kadar oyunu devam ettirir.
