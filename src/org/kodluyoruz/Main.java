@@ -7,17 +7,29 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try {
+        boolean sizeError = true;
 
-            Scanner scanner=new Scanner(System.in);
-            System.out.print("Satır:");
-            int row=scanner.nextInt();
-            System.out.print("Sütun:");
-            int column=scanner.nextInt();
+        do {
+            try {
+                sizeError = false;
 
-            String matrix[][]=new String[row][column];
+                Scanner scanner=new Scanner(System.in);
+                int row = 0, column = 0;
+                String matrix[][];
 
-            if (matrix.length >= 3 && matrix[0].length >= 3 && matrix.length <= 7 && matrix[0].length <= 7 && matrix.length == matrix[0].length){
+                do {
+                    System.out.print("Satır:");
+                    row=scanner.nextInt();
+                    System.out.print("Sütun:");
+                    column=scanner.nextInt();
+
+                    matrix= new String[row][column];
+
+                    if (matrixIsInvalid(row, column)){
+                        System.out.println("Lütfen 3-7 arasında ve birbirine eşit sayılar girin.\n");
+                    }
+                }while (matrixIsInvalid(row, column));
+
 
                 String[] gamers={"gamer", "computer"};
                 String[] characters={"s", "o"};
@@ -106,13 +118,18 @@ public class Main {
                     System.out.println("Oyun berabere sonuçlandı.");
                 }
 
-
-            }else{
-                System.out.println("Lütfen 3-7 arasında ve birbirine eşit sayılar girin.");
+            } catch (NegativeArraySizeException ex) {
+                sizeError = true;
+                System.out.println("Satır ve sütun negatif değer alamaz!\n");
             }
-        } catch (NegativeArraySizeException ex) {
-            System.out.println("Satır ve sütun negatif değer alamaz!");
-        }
+        }while (sizeError);
+
+
+    }
+
+    public static boolean matrixIsInvalid(int row, int column){
+        return  !(row >= 3 && column >= 3 && row <= 7 && column <= 7 && row == column)
+                || row < 0 || column < 0;
     }
 
     //Matrix'de boş alan kalmayana kadar oyunu devam ettirir.
